@@ -1,11 +1,8 @@
 <?php
-
 namespace App\Exceptions;
-
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-
 class Handler extends ExceptionHandler
 {
     /**
@@ -16,7 +13,6 @@ class Handler extends ExceptionHandler
     protected $dontReport = [
         //
     ];
-
     /**
      * A list of the inputs that are never flashed for validation exceptions.
      *
@@ -26,7 +22,6 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
-
     /**
      * Report or log an exception.
      *
@@ -37,7 +32,6 @@ class Handler extends ExceptionHandler
     {
         parent::report($exception);
     }
-
     /**
      * Render an exception into an HTTP response.
      *
@@ -49,26 +43,26 @@ class Handler extends ExceptionHandler
     {
         return parent::render($request, $exception);
     }
-
-    /*
-     * Phương thức này sẽ redirect khi người dùng không xác thực
+    /**
+     * phuong thwucs này sẽ redirect khi người dùng k xác thực
+     * @param \Illuminate\Http\Request $request
+     * @param AuthenticationException $exception
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        if ($request->expectsJson()){
-            return response()->json(['error' =>'Unauthenticated'], 401);
+        if ($request->expectsjson()){
+            return response()->json(['error'=>'unauthenticated.'],401);
         }
-
-        $guard = array_get($exception->guards(), 0);
+        $guard=array_get($exception-guards(),0);
         switch ($guard){
             case 'admin':
-                $login = 'admin.auth.login';
+                $login='admin.auth.login';
                 break;
             default:
-                $login = 'login';
+                $login='login';
                 break;
         }
-
-        return redirect()-> guest(route($login));
+        return redirect()->guest(route($login));
     }
 }
